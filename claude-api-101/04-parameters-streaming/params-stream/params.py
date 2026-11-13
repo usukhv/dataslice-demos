@@ -8,7 +8,7 @@ MODEL = "claude-haiku-5-5"
 
 response = client.messages.create(
     model=MODEL,
-    max_tokens=1024,
+    max_tokens=4096,
     output_config={"effort": "low"},
     stop_sequences=["6."],
     messages=[
