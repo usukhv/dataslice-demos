@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="2160" viewBox="0 0 1920 2160">
+<title>Brand kit</title>
+<rect id="bg" x="0" y="0" width="1920" height="2160" fill="#FFFFFF"/>
+<text id="title" x="80" y="140" font-family="Inter" font-size="72" font-weight="700" fill="#1F1A17" text-anchor="start">Brand kit · Сансар кофе (жишээ)</text>
+<g id="1-logo">
+<text x="80" y="260" font-family="Inter" font-size="36" font-weight="700" fill="#B4532A" text-anchor="start">1. Лого</text>
+<rect x="80" y="290" width="560" height="240" rx="24" fill="#F7F1E8"/>
+<text x="360" y="430" font-family="Inter" font-size="64" font-weight="800" fill="#1F1A17" text-anchor="middle">САНСАР</text>
+<rect x="680" y="290" width="560" height="240" rx="24" fill="#1F1A17"/>
+<text x="960" y="430" font-family="Inter" font-size="64" font-weight="800" fill="#F7F1E8" text-anchor="middle">САНСАР</text>
+<text x="1280" y="380" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">Хамгийн бага өргөн: 120 px</text>
+<text x="1280" y="430" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">Эргэн тойронд: үсгийн өндөртэй</text>
+<text x="1280" y="470" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">тэнцүү хоосон зай</text>
+</g>
+<g id="2-color">
+<text x="80" y="640" font-family="Inter" font-size="36" font-weight="700" fill="#B4532A" text-anchor="start">2. Өнгө</text>
+<rect x="80" y="670" width="320" height="180" rx="24" fill="#B4532A"/>
+<text x="80" y="900" font-family="Inter" font-size="26" font-weight="700" fill="#1F1A17" text-anchor="start">brand/primary</text>
+<text x="80" y="940" font-family="Inter" font-size="26" font-weight="400" fill="#5C534D" text-anchor="start">#B4532A</text>
+<rect x="440" y="670" width="320" height="180" rx="24" fill="#2F5D50"/>
+<text x="440" y="900" font-family="Inter" font-size="26" font-weight="700" fill="#1F1A17" text-anchor="start">brand/secondary</text>
+<text x="440" y="940" font-family="Inter" font-size="26" font-weight="400" fill="#5C534D" text-anchor="start">#2F5D50</text>
+<rect x="800" y="670" width="320" height="180" rx="24" fill="#F2B33D"/>
+<text x="800" y="900" font-family="Inter" font-size="26" font-weight="700" fill="#1F1A17" text-anchor="start">brand/accent</text>
+<text x="800" y="940" font-family="Inter" font-size="26" font-weight="400" fill="#5C534D" text-anchor="start">#F2B33D</text>
+<rect x="1160" y="670" width="320" height="180" rx="24" fill="#1F1A17"/>
+<text x="1160" y="900" font-family="Inter" font-size="26" font-weight="700" fill="#1F1A17" text-anchor="start">neutral/dark</text>
+<text x="1160" y="940" font-family="Inter" font-size="26" font-weight="400" fill="#5C534D" text-anchor="start">#1F1A17</text>
+<rect x="1520" y="670" width="320" height="180" rx="24" fill="#F7F1E8" stroke="#D6D0C8" stroke-width="2"/>
+<text x="1520" y="900" font-family="Inter" font-size="26" font-weight="700" fill="#1F1A17" text-anchor="start">neutral/light</text>
+<text x="1520" y="940" font-family="Inter" font-size="26" font-weight="400" fill="#5C534D" text-anchor="start">#F7F1E8</text>
+<text x="80" y="1000" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">brand/accent зөвхөн CTA, онцлох үгэнд. 60-30-10.</text>
+</g>
+<g id="3-type">
+<text x="80" y="1110" font-family="Inter" font-size="36" font-weight="700" fill="#B4532A" text-anchor="start">3. Үсгийн хэв</text>
+<text x="80" y="1220" font-family="Inter" font-size="96" font-weight="700" fill="#1F1A17" text-anchor="start">Heading/XL · Өвлийн шинэ цэс</text>
+<text x="80" y="1310" font-family="Inter" font-size="64" font-weight="700" fill="#1F1A17" text-anchor="start">Heading/L · Үйлчилгээ өглөө 8-аас</text>
+<text x="80" y="1380" font-family="Inter" font-size="36" font-weight="400" fill="#1F1A17" text-anchor="start">Body/M · Inter Regular 36, мөрийн зай 140%</text>
+<text x="80" y="1430" font-family="Inter" font-size="24" font-weight="700" fill="#1F1A17" text-anchor="start" letter-spacing="1.5">LABEL/S · INTER BOLD 24</text>
+</g>
+<g id="5-components">
+<text x="80" y="1540" font-family="Inter" font-size="36" font-weight="700" fill="#B4532A" text-anchor="start">5. Component</text>
+<rect x="80" y="1580" width="300" height="88" rx="44" fill="#B4532A"/>
+<text x="230" y="1637" font-family="Inter" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">Захиалах</text>
+<rect x="420" y="1580" width="260" height="88" rx="16" fill="#F2B33D"/>
+<text x="550" y="1637" font-family="Inter" font-size="36" font-weight="800" fill="#1F1A17" text-anchor="middle">12 900₮</text>
+<rect x="720" y="1580" width="120" height="88" rx="44" fill="#F7F1E8"/>
+<text x="780" y="1637" font-family="Inter" font-size="30" font-weight="700" fill="#B4532A" text-anchor="middle">1/5</text>
+</g>
+<g id="4-6-image-templates">
+<text x="80" y="1760" font-family="Inter" font-size="36" font-weight="700" fill="#B4532A" text-anchor="start">4. Зураг · 6. Загвар</text>
+<text x="80" y="1810" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">Зураг: нуман Mask, дулаан Temperature, Contrast бага зэрэг өндөр</text>
+<text x="80" y="1855" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">Загвар: Feed 4:5 · Story 9:16 · Reel cover · Carousel (Загварууд хуудас)</text>
+</g>
+<g id="7-8-voice-dont">
+<text x="80" y="1950" font-family="Inter" font-size="36" font-weight="700" fill="#B4532A" text-anchor="start">7. Дуу хоолой · 8. Хориотой</text>
+<text x="80" y="2000" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">Найрсаг, товч, итгэлтэй. Хүндэт харилцагч аа гэж бичихгүй.</text>
+<text x="80" y="2045" font-family="Inter" font-size="28" font-weight="400" fill="#1F1A17" text-anchor="start">Логог сунгах, өөр өнгөөр будах, 3-аас олон фонт хэрэглэхгүй.</text>
+</g>
+</svg>

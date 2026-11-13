@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>Phone mockup</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#F7F1E8"/>
+<rect id="phone-body" x="280" y="145" width="520" height="1060" rx="72" fill="#1F1A17"/>
+<rect id="screen" x="300" y="165" width="480" height="1020" rx="56" fill="#D9CBB8"/>
+<text id="screen-label" x="540" y="690" font-family="Inter" font-size="36" font-weight="700" fill="#1F1A17" text-anchor="middle">Story PNG</text>
+</svg>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>Палитр</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#FFFFFF"/>
+<text id="title" x="80" y="140" font-family="Inter" font-size="72" font-weight="700" fill="#1F1A17" text-anchor="start">Палитр</text>
+<g id="swatch-brand-primary">
+<circle cx="140" cy="330" r="80" fill="#B4532A"/>
+<text x="140" y="460" font-family="Inter" font-size="22" font-weight="700" fill="#1F1A17" text-anchor="middle">Үндсэн</text>
+<text x="140" y="494" font-family="Inter" font-size="22" font-weight="400" fill="#5C534D" text-anchor="middle">#B4532A</text>
+</g>
+<g id="swatch-brand-secondary">
+<circle cx="340" cy="330" r="80" fill="#2F5D50"/>
+<text x="340" y="460" font-family="Inter" font-size="22" font-weight="700" fill="#1F1A17" text-anchor="middle">Туслах</text>
+<text x="340" y="494" font-family="Inter" font-size="22" font-weight="400" fill="#5C534D" text-anchor="middle">#2F5D50</text>
+</g>
+<g id="swatch-brand-accent">
+<circle cx="540" cy="330" r="80" fill="#F2B33D"/>
+<text x="540" y="460" font-family="Inter" font-size="22" font-weight="700" fill="#1F1A17" text-anchor="middle">Онцлох</text>
+<text x="540" y="494" font-family="Inter" font-size="22" font-weight="400" fill="#5C534D" text-anchor="middle">#F2B33D</text>
+</g>
+<g id="swatch-neutral-dark">
+<circle cx="740" cy="330" r="80" fill="#1F1A17"/>
+<text x="740" y="460" font-family="Inter" font-size="22" font-weight="700" fill="#1F1A17" text-anchor="middle">Бараан саармаг</text>
+<text x="740" y="494" font-family="Inter" font-size="22" font-weight="400" fill="#5C534D" text-anchor="middle">#1F1A17</text>
+</g>
+<g id="swatch-neutral-light">
+<circle cx="940" cy="330" r="80" fill="#F7F1E8" stroke="#D6D0C8" stroke-width="2"/>
+<text x="940" y="460" font-family="Inter" font-size="22" font-weight="700" fill="#1F1A17" text-anchor="middle">Цайвар саармаг</text>
+<text x="940" y="494" font-family="Inter" font-size="22" font-weight="400" fill="#5C534D" text-anchor="middle">#F7F1E8</text>
+</g>
+<g id="contrast-1">
+<rect x="80" y="600" width="920" height="150" rx="24" fill="#F7F1E8" stroke="#D6D0C8" stroke-width="2"/>
+<text x="120" y="670" font-family="Inter" font-size="44" font-weight="700" fill="#1F1A17" text-anchor="start">Өглөөний кофе</text>
+<text x="120" y="718" font-family="Inter" font-size="22" font-weight="400" fill="#1F1A17" text-anchor="start">Бараан текст / цайвар дэвсгэр</text>
+<text x="960" y="692" font-family="Inter" font-size="30" font-weight="700" fill="#1F1A17" text-anchor="end">15.35:1 OK</text>
+</g>
+<g id="contrast-2">
+<rect x="80" y="780" width="920" height="150" rx="24" fill="#B4532A" stroke="#D6D0C8" stroke-width="2"/>
+<text x="120" y="850" font-family="Inter" font-size="44" font-weight="700" fill="#F7F1E8" text-anchor="start">Өглөөний кофе</text>
+<text x="120" y="898" font-family="Inter" font-size="22" font-weight="400" fill="#F7F1E8" text-anchor="start">Цайвар текст / үндсэн өнгө</text>
+<text x="960" y="872" font-family="Inter" font-size="30" font-weight="700" fill="#F7F1E8" text-anchor="end">4.44:1 ХҮРЭХГҮЙ</text>
+</g>
+<g id="contrast-3">
+<rect x="80" y="960" width="920" height="150" rx="24" fill="#B4532A" stroke="#D6D0C8" stroke-width="2"/>
+<text x="120" y="1030" font-family="Inter" font-size="44" font-weight="700" fill="#FFFFFF" text-anchor="start">Өглөөний кофе</text>
+<text x="120" y="1078" font-family="Inter" font-size="22" font-weight="400" fill="#FFFFFF" text-anchor="start">Цагаан текст / үндсэн өнгө</text>
+<text x="960" y="1052" font-family="Inter" font-size="30" font-weight="700" fill="#FFFFFF" text-anchor="end">4.99:1 OK</text>
+</g>
+<g id="contrast-4">
+<rect x="80" y="1140" width="920" height="150" rx="24" fill="#F7F1E8" stroke="#D6D0C8" stroke-width="2"/>
+<text x="120" y="1210" font-family="Inter" font-size="44" font-weight="700" fill="#F2B33D" text-anchor="start">Өглөөний кофе</text>
+<text x="120" y="1258" font-family="Inter" font-size="22" font-weight="400" fill="#F2B33D" text-anchor="start">Онцлох өнгө / цайвар дэвсгэр</text>
+<text x="960" y="1232" font-family="Inter" font-size="30" font-weight="700" fill="#F2B33D" text-anchor="end">1.66:1 ХҮРЭХГҮЙ</text>
+</g>
+</svg>

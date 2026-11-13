@@ -1,0 +1,6 @@
+winget search python
+winget install --id Git.Git -e --source winget
+winget install 9NQ7512CXL7T -e
+# Terminal-аа хааж дахин нээ
+git --version
+python --version

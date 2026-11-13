@@ -1,0 +1,7 @@
+1. git --version
+   Git байхгүй бол Command Line Tools суулгахыг санал болгоно, зөвшөөр.
+   Эсвэл: xcode-select --install
+   Homebrew-тэй бол: brew install git
+2. Нэвтрэх: brew install gh
+   gh auth login
+   HTTPS сонго, Git-д нэвтрэх эсэхийг асуухад Y.

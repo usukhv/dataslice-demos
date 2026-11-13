@@ -1,0 +1,11 @@
+# Нууц утгатай файлууд
+.env
+.env.*
+!.env.example
+
+# Үйлдлийн системийн түр файлууд
+.DS_Store
+Thumbs.db
+
+# Багцын хавтас
+node_modules/

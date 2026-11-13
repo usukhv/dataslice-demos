@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Нарны цүнх</title>
+  <!-- n8n chat widget (@n8n/chat), CDN embed: https://www.npmjs.com/package/@n8n/chat -->
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat@1.46.3/dist/style.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f6f6f8; color: #111; }
+    main { max-width: 640px; margin: 0 auto; padding: 48px 16px; }
+    :root {
+      --chat--color--primary: #3b5bdb;
+      --chat--color--secondary: #1c7ed6;
+      --chat--toggle--background: #3b5bdb;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Нарны цүнх</h1>
+    <p>Баруун доод буланд байгаа чат товчийг дарж AI туслахаас асуугаарай.</p>
+  </main>
+
+  <script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat@1.46.3/dist/chat.bundle.es.js';
+
+    // CHAT_URL: Chat Trigger node-ийн **Chat URL** (workflow-оо Publish хийсний дараа ажиллана)
+    const CHAT_URL = 'https://YOUR-N8N-DOMAIN/webhook/YOUR-CHAT-ID/chat';
+
+    createChat({
+      webhookUrl: CHAT_URL,
+      mode: 'window',
+      loadPreviousSession: false,
+      showWelcomeScreen: false,
+      initialMessages: [
+        'Сайн байна уу! Би Нарны цүнхний AI туслах.',
+        'Бараа, үнэ, хүргэлтийн талаар асуугаарай.'
+      ],
+      i18n: {
+        en: {
+          title: 'Нарны цүнх',
+          subtitle: 'AI туслах 24/7 хариулна. Хүн хэрэгтэй бол ажилтан холбогдоно.',
+          footer: '',
+          getStarted: 'Яриа эхлүүлэх',
+          inputPlaceholder: 'Асуултаа бичнэ үү...'
+        }
+      }
+    });
+  </script>
+</body>
+</html>

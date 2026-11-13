@@ -1,0 +1,591 @@
+{
+  "name": "Receipt checker",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "4f397e02-a7b6-5a2d-b0e0-d5b461e850e0",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "442fbcd6-212f-52ce-9335-f99fdd36826f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f06a1a96-b1d1-5dce-b85f-7fff9fb7a9e0",
+              "leftValue": "={{ $json.message.photo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ca93dbe7-298e-5db0-828a-26ec2d8f4fc5",
+      "name": "Has photo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "fileId": "={{ $json.message.photo.last().file_id }}",
+        "download": true,
+        "additionalFields": {}
+      },
+      "id": "382bcbd4-962d-5787-a383-4fbc78ae180a",
+      "name": "Get file",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "models/gemini-3.6-flash"
+        },
+        "text": "Чи худалдан авалтын баримт уншигч. Зураг дээрх баримтыг уншаад ЗӨВХӨН доорх бүтэцтэй JSON буцаа. Тайлбар, markdown бүү нэм.\n\n{\n  \"is_receipt\": true,\n  \"date\": \"YYYY-MM-DD\",\n  \"vendor\": \"дэлгүүр, байгууллагын нэр\",\n  \"amount\": 12500,\n  \"currency\": \"MNT\",\n  \"category\": \"Хүнс\",\n  \"receipt_no\": \"баримтын дугаар\",\n  \"items_total\": 12500\n}\n\nДүрэм:\n- date: баримтын огноо YYYY-MM-DD хэлбэрээр.\n- amount: нийт төлсөн дүн. Зай, таслал, ₮ тэмдэггүй цэвэр тоо.\n- items_total: барааны мөрүүдийн үнийн нийлбэр. Цэвэр тоо.\n- category: зөвхөн эдгээрийн нэг: Хүнс, Хоол кафе, Тээвэр, Шатахуун, Оффис, Харилцаа холбоо, Бусад.\n- currency: 3 үсэгт код. Тодорхойгүй бол MNT.\n- Тод уншиж чадахгүй талбарт таамаг бүү бич, null бич.\n- Зураг баримт биш бол is_receipt-д false бич.\n- Худалдан авагчийн нэр, регистр, утас, картын дугаарыг хэзээ ч бүү буцаа.",
+        "inputType": "binary",
+        "binaryPropertyName": "data",
+        "simplify": true,
+        "options": {
+          "maxOutputTokens": 2000
+        }
+      },
+      "id": "9bbc8ac9-1fcd-57e5-b57f-c43fc0a60a6b",
+      "name": "Read receipt",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        -100
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Code node \"Parse receipt\" · Mode: Run Once for Each Item\n// Gemini-ийн хариу текстээс JSON-оо салгаж, талбар бүрийг шалгана.\nconst parts = $json.content?.parts || [];\nconst raw = parts.map((p) => p.text || '').join('');\n\nlet r = {};\ntry {\n  r = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));\n} catch (e) {\n  r = {};\n}\n\nconst CATEGORIES = ['Хүнс', 'Хоол кафе', 'Тээвэр', 'Шатахуун', 'Оффис', 'Харилцаа холбоо', 'Бусад'];\nconst num = (v) => {\n  const n = Number(String(v ?? '').replace(/[^\\d.]/g, ''));\n  return n > 0 ? n : null;\n};\n\nreturn {\n  json: {\n    is_receipt: r.is_receipt === true,\n    date: /^\\d{4}-\\d{2}-\\d{2}$/.test(r.date) ? r.date : null,\n    vendor: r.vendor || null,\n    amount: num(r.amount),\n    currency: r.currency || 'MNT',\n    category: CATEGORIES.includes(r.category) ? r.category : 'Бусад',\n    receipt_no: r.receipt_no ? String(r.receipt_no) : null,\n    items_total: num(r.items_total),\n  },\n};"
+      },
+      "id": "17c5f781-cb05-54ab-b3dc-48f340d48106",
+      "name": "Parse receipt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Code node \"Check receipt\" · Mode: Run Once for Each Item\n// Дутуу талбар, нийлбэрийн зөрүүг шалгаж, хүснэгтийн мөрөө бэлдэнэ.\nconst r = $json;\nconst missing = [];\nif (!r.is_receipt) missing.push('баримт танигдсангүй');\nelse {\n  if (!r.date) missing.push('огноо');\n  if (!r.vendor) missing.push('худалдагч');\n  if (!r.amount) missing.push('дүн');\n}\n\nlet needs_review = 'no';\nif (r.items_total && r.amount && Math.abs(r.items_total - r.amount) > r.amount * 0.01) {\n  needs_review = 'yes';\n}\n\nconst dedupe_key = r.receipt_no ? `no:${r.receipt_no}` : `${r.date}|${r.vendor}|${r.amount}`;\nconst msg = $('Telegram Trigger').item.json.message;\n\nreturn {\n  json: {\n    ...r,\n    missing: missing.join(', '),\n    needs_review,\n    dedupe_key,\n    month: r.date ? r.date.slice(0, 7) : '',\n    telegram_user: msg.from?.first_name || '',\n    chat_id: msg.chat.id,\n    created_at: $now.toFormat('yyyy-MM-dd HH:mm'),\n  },\n};"
+      },
+      "id": "8a511fc6-adef-5236-9ff4-0b4b35398974",
+      "name": "Check receipt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "18a9bb96-6295-5a76-9e1b-551542a84c8e",
+              "leftValue": "={{ $json.missing }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3b719c92-2c4b-50a8-b117-e98447af4194",
+      "name": "Missing data?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "receipts"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "dedupe_key",
+              "lookupValue": "={{ $json.dedupe_key }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "id": "147ec427-0c36-5e91-a1d5-5e8c422a0339",
+      "name": "Find duplicate",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1540,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5ea73196-2dd7-5c49-81f7-47c2e98cac78",
+              "leftValue": "={{ $json.dedupe_key }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "28460d04-feed-5aa6-b359-554c0502387a",
+      "name": "Already logged?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "receipts"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $('Check receipt').item.json.date }}",
+            "vendor": "={{ $('Check receipt').item.json.vendor }}",
+            "amount": "={{ $('Check receipt').item.json.amount }}",
+            "currency": "={{ $('Check receipt').item.json.currency }}",
+            "category": "={{ $('Check receipt').item.json.category }}",
+            "receipt_no": "={{ $('Check receipt').item.json.receipt_no }}",
+            "dedupe_key": "={{ $('Check receipt').item.json.dedupe_key }}",
+            "month": "={{ $('Check receipt').item.json.month }}",
+            "needs_review": "={{ $('Check receipt').item.json.needs_review }}",
+            "telegram_user": "={{ $('Check receipt').item.json.telegram_user }}",
+            "created_at": "={{ $('Check receipt').item.json.created_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor",
+              "displayName": "vendor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "currency",
+              "displayName": "currency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "receipt_no",
+              "displayName": "receipt_no",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dedupe_key",
+              "displayName": "dedupe_key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "month",
+              "displayName": "month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "needs_review",
+              "displayName": "needs_review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "3b8172a9-a2ff-5df1-866a-6aa60988a6ae",
+      "name": "Log receipt",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1980,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Check receipt').item.json.chat_id }}",
+        "text": "=Бүртгэлээ.\n{{ $('Check receipt').item.json.date }}, {{ $('Check receipt').item.json.vendor }}\n{{ $('Check receipt').item.json.amount }} {{ $('Check receipt').item.json.currency }}, {{ $('Check receipt').item.json.category }}\n{{ $('Check receipt').item.json.needs_review === 'yes' ? 'Нийлбэр зөрүүтэй байж магадгүй. Хүснэгтээ шалгана уу.' : '' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "daeb1156-fcc8-52f1-bf41-6a290cd8b334",
+      "name": "Confirm",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $('Check receipt').item.json.chat_id }}",
+        "text": "Энэ баримт өмнө нь бүртгэгдсэн байна. Дахин бүртгэсэнгүй.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f78bd78d-338d-5681-8f45-e6339e8d7fd9",
+      "name": "Duplicate reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1980,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=Уншиж чадсангүй: {{ $json.missing }}. Баримтаа гэрэлтэй газар, дээрээс нь шулуун авч дахин илгээнэ үү.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "6a0bdf11-cd72-5adc-af80-8fd5948d8ddd",
+      "name": "Ask again",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1540,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "Сайн уу! Баримтынхаа зургийг илгээнэ үү.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "59e5cc83-e54c-5d84-8856-58c4e9410fb3",
+      "name": "Ask for photo",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Has photo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has photo?": {
+      "main": [
+        [
+          {
+            "node": "Get file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ask for photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get file": {
+      "main": [
+        [
+          {
+            "node": "Read receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read receipt": {
+      "main": [
+        [
+          {
+            "node": "Parse receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse receipt": {
+      "main": [
+        [
+          {
+            "node": "Check receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check receipt": {
+      "main": [
+        [
+          {
+            "node": "Missing data?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Missing data?": {
+      "main": [
+        [
+          {
+            "node": "Ask again",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find duplicate": {
+      "main": [
+        [
+          {
+            "node": "Already logged?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already logged?": {
+      "main": [
+        [
+          {
+            "node": "Duplicate reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log receipt": {
+      "main": [
+        [
+          {
+            "node": "Confirm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "pinData": {}
+}

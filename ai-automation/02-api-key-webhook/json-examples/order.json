@@ -1,0 +1,7 @@
+{
+  "customer": "Болд",
+  "product": "Цамц",
+  "quantity": 2,
+  "paid": true,
+  "colors": ["улаан", "цэнхэр"]
+}

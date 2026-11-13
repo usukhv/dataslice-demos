@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>Quote poster</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#1F1A17"/>
+<text id="quote-mark" x="-10" y="250" font-family="Inter" font-size="400" font-weight="800" fill="#F2B33D" text-anchor="start">“</text>
+<g id="quote">
+<text x="80" y="520" font-family="Inter" font-size="104" font-weight="800" fill="#F7F1E8" text-anchor="start">Кофе бол</text>
+<text x="80" y="620" font-family="Inter" font-size="104" font-weight="800" fill="#F7F1E8" text-anchor="start">өглөө бүрийн</text>
+<text x="80" y="720" font-family="Inter" font-size="104" font-weight="800" fill="#F7F1E8">жижиг <tspan fill="#F2B33D">баяр</tspan>.</text>
+</g>
+<text id="author" x="80" y="1180" font-family="Inter" font-size="32" font-weight="400" fill="#F7F1E8" text-anchor="start">Болор, байнгын үйлчлүүлэгч</text>
+<text id="logo" x="1000" y="1270" font-family="Inter" font-size="28" font-weight="800" fill="#F2B33D" text-anchor="end">САНСАР</text>
+</svg>

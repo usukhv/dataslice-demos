@@ -1,0 +1,5 @@
+brand/primary    #B4532A   Үндсэн
+brand/secondary  #2F5D50   Туслах
+brand/accent     #F2B33D   Онцлох
+neutral/dark     #1F1A17   Бараан саармаг
+neutral/light    #F7F1E8   Цайвар саармаг

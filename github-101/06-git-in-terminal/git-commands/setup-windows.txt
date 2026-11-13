@@ -1,0 +1,4 @@
+1. winget install --id Git.Git -e --source winget
+   эсвэл git-scm.com/install/windows-оос Git for Windows татаж суулга.
+2. Terminal-аа хааж дахин нээ: git --version
+3. Нэвтрэх: Git Credential Manager багтсан. Анх push хийхэд browser нээгдэнэ.

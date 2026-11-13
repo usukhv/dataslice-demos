@@ -1,0 +1,890 @@
+{
+  "name": "Booking Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ],
+      "id": "b694bee6-be21-521b-ab25-19d9f4a38063",
+      "webhookId": "5b0c7a1e-3f2d-4c8b-9a61-b00c1a7e0001"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Services"
+        },
+        "options": {}
+      },
+      "name": "Get services",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        220,
+        300
+      ],
+      "id": "cc14c2ef-c906-596e-a435-14a24ee33746"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "services",
+        "options": {}
+      },
+      "name": "Services list",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "id": "817c634a-44d8-576e-99b7-3af9699c47b9"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Чи \"Нарны салон\"-ы захиалгын туслах. Монгол хэлээр, товч, эелдэг хариул.\nОдоо: {{ $now.toISO() }} ({{ $now.weekdayLong }}). Энэ бол Улаанбаатарын цаг (+08:00).\nАжлын цаг: Даваа-Бямба 10:00-19:00. Ням гаригт амарна.\n\nҮйлчилгээний жагсаалт (service, duration_min, price, note):\n{{ JSON.stringify($json.services) }}\nЗөвхөн энэ жагсаалтад байгаа үйлчилгээ, үнийг хэл. Үнэ, хугацааг бүү зохио.\n\nҮйлчлүүлэгчид илгээх хариугаа reply талбарт бич.\n\nДүрэм:\n1. Үйлчилгээ, өдөр, цагийг асууж тодруул. Нэг удаад нэг л асуулт асуу.\n2. \"маргааш\", \"нөгөөдөр\", \"ирэх Мягмар\" гэх мэт үгийг дээрх \"Одоо\"-оос тооцоолж яг огноо болго.\n3. start, end-ийг ISO 8601 хэлбэрээр +08:00-тэй бич. end = start + duration_min.\n4. Ажлын цагаас гадуурх эсвэл өнгөрсөн цагийг бүү зөвшөөр.\n5. Бүгд тодорхой болмогц \"Маргааш 15:00-15:45, Үс засалт. Баталгаажуулах уу?\" гэж асуу.\n6. Үйлчлүүлэгч тийм гэж батлахад л ready = true. Бусад үед ready = false.\n7. Тодорхойгүй талбарыг хоосон \"\" болго.\n8. Утас, регистр, хаяг, эрүүл мэндийн мэдээлэл бүү асуу.\n9. Үйлчлүүлэгч захиалгаа цуцлахыг хүсвэл cancel = true, ready = false. Бусад үед cancel = false.\n10. Цагаа өөрчлөхийг хүсвэл \"Эхлээд одоогийн захиалгыг цуцлаад, дараа нь шинэ цаг сонгоё\" гэж хэлээд cancel = true болго.\n"
+        }
+      },
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        680,
+        300
+      ],
+      "id": "42f3d98f-0fdf-50a3-950c-2b8aba8543bb"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        540
+      ],
+      "id": "4a183ed2-4af6-537b-8cc3-4d7ebe850ecd"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        540
+      ],
+      "id": "0485d25d-4ef0-5605-9d6f-35297fa699ea"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"reply\": \"Таны захиалгыг цуцалж байна.\",\n  \"ready\": false,\n  \"cancel\": true,\n  \"service\": \"\",\n  \"start\": \"\",\n  \"end\": \"\"\n}"
+      },
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        540
+      ],
+      "id": "d2af0231-d187-5de1-9650-66c19249cc46"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "04b80deb-2b7a-5eab-92cd-d0a8ec645d19",
+              "leftValue": "={{ $json.output.cancel }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Wants cancel",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        920,
+        300
+      ],
+      "id": "e8d0e982-5e8d-564a-9cd9-d8be153f96c3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0cc024fa-eb8a-512b-8388-086c789e2ba5",
+              "leftValue": "={{ $json.output.ready }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Ready?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1140,
+        420
+      ],
+      "id": "d486e0c9-4f0b-519d-bb65-2adb4aba96bd"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.output.reply }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        620
+      ],
+      "id": "eb182417-d484-573e-b22e-427c5fba8342"
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_CALENDAR_ID@group.calendar.google.com"
+        },
+        "timeMin": "={{ $('AI Agent').first().json.output.start }}",
+        "timeMax": "={{ $('AI Agent').first().json.output.end }}",
+        "options": {}
+      },
+      "name": "Check slot",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1380,
+        340
+      ],
+      "id": "3f35f515-3d61-51c7-b4c3-5ba5e6285fb1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f28698ec-b91e-5e6d-91dd-00ecd230b78d",
+              "leftValue": "={{ $json.available }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "0fc360ff-d226-5be7-a44c-b443b4acbdb6",
+              "leftValue": "={{ DateTime.fromISO($('AI Agent').first().json.output.start) > $now }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Is free",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        340
+      ],
+      "id": "6c6d6f60-0d8f-5428-af89-1b533c5920b4"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_CALENDAR_ID@group.calendar.google.com"
+        },
+        "start": "={{ $('AI Agent').first().json.output.start }}",
+        "end": "={{ $('AI Agent').first().json.output.end }}",
+        "additionalFields": {
+          "summary": "={{ $('AI Agent').first().json.output.service }} - {{ $('Telegram Trigger').first().json.message.from.first_name }}",
+          "description": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+        }
+      },
+      "name": "Create event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1840,
+        240
+      ],
+      "id": "b0b3041c-642b-586f-9263-6ae6cf74d3c0"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Bookings"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $now.toISO() }}",
+            "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+            "customer_name": "={{ $('Telegram Trigger').first().json.message.from.first_name }}",
+            "service": "={{ $('AI Agent').first().json.output.service }}",
+            "start": "={{ $('AI Agent').first().json.output.start }}",
+            "end": "={{ $('AI Agent').first().json.output.end }}",
+            "event_id": "={{ $('Create event').first().json.id }}",
+            "status": "booked"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "start",
+              "displayName": "start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "end",
+              "displayName": "end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "name": "Log booking",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2060,
+        240
+      ],
+      "id": "f9abe0e5-ea5f-5cb7-97dc-2641e48a0286"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=Захиалга баталгаажлаа!\n{{ $('AI Agent').first().json.output.service }}\n{{ DateTime.fromISO($('AI Agent').first().json.output.start).toFormat('yyyy.MM.dd HH:mm') }}\nЦуцлах бол \"цуцлах\" гэж бичээрэй.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "Confirm",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2280,
+        240
+      ],
+      "id": "b089b518-0519-5dbb-9d7e-c0d2faa5d150"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "Уучлаарай, тэр цаг захиалгатай эсвэл өнгөрсөн цаг байна. Өөр цаг хэлнэ үү?",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "Busy reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1840,
+        440
+      ],
+      "id": "1362a230-08aa-5bb6-954e-913ba8fbe596"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_CALENDAR_ID@group.calendar.google.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now }}",
+        "timeMax": "={{ $now.plus({ days: 60 }) }}",
+        "options": {
+          "query": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+        }
+      },
+      "name": "Find bookings",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1140,
+        0
+      ],
+      "id": "289e4e79-0804-5d4a-ae92-d9ab6b229778",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b8a7ff9-cfd6-583d-8f86-8a4e8613ac83",
+              "leftValue": "={{ String($json.description) }}",
+              "rightValue": "={{ String($('Telegram Trigger').first().json.message.chat.id) }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Has booking",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1360,
+        0
+      ],
+      "id": "1cff0918-2387-5799-82e1-6f1810f0ec63"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_CALENDAR_ID@group.calendar.google.com"
+        },
+        "eventId": "={{ $json.id }}",
+        "options": {}
+      },
+      "name": "Delete event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1580,
+        -100
+      ],
+      "id": "45bac2b6-e413-59c3-9dd0-2caa4d93112b"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Bookings"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "event_id": "={{ $('Has booking').item.json.id }}",
+            "status": "cancelled"
+          },
+          "matchingColumns": [
+            "event_id"
+          ],
+          "schema": [
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "start",
+              "displayName": "start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "end",
+              "displayName": "end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "event_id",
+              "displayName": "event_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Mark cancelled",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1800,
+        -100
+      ],
+      "id": "e586a14c-3aed-5a3c-92d1-26a148fe6cb7"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "Таны захиалга цуцлагдлаа. Шинэ цаг авах бол хүссэн өдөр, цагаа бичээрэй.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "Cancel reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2020,
+        -100
+      ],
+      "id": "abb96476-52c7-544b-9a8d-51ebd1ec7135",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "Танд идэвхтэй захиалга олдсонгүй.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "No booking",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1580,
+        100
+      ],
+      "id": "40851621-20a2-5c34-9b4c-a20ff4299433",
+      "executeOnce": true
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get services": {
+      "main": [
+        [
+          {
+            "node": "Services list",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Services list": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check slot": {
+      "main": [
+        [
+          {
+            "node": "Is free",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is free": {
+      "main": [
+        [
+          {
+            "node": "Create event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Busy reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create event": {
+      "main": [
+        [
+          {
+            "node": "Log booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log booking": {
+      "main": [
+        [
+          {
+            "node": "Confirm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Wants cancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wants cancel": {
+      "main": [
+        [
+          {
+            "node": "Find bookings",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ready?": {
+      "main": [
+        [
+          {
+            "node": "Check slot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find bookings": {
+      "main": [
+        [
+          {
+            "node": "Has booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has booking": {
+      "main": [
+        [
+          {
+            "node": "Delete event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event": {
+      "main": [
+        [
+          {
+            "node": "Mark cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark cancelled": {
+      "main": [
+        [
+          {
+            "node": "Cancel reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "active": false,
+  "meta": {}
+}

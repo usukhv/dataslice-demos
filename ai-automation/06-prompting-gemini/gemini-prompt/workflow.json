@@ -1,0 +1,134 @@
+{
+  "name": "Gemini prompt туршилт",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c3f0c003-0000-4000-8000-000000000001",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d2b0b20-2222-4c22-a222-000000000001",
+              "name": "question",
+              "value": "Хүргэлт хэдэн цаг хүртэл хийдэг вэ?",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3f0c003-0000-4000-8000-000000000002",
+      "name": "Асуулт",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.question }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "Чи \"Номин цэцэг\" цэцгийн дэлгүүрийн Telegram туслах.\n\nМэдээлэл:\n- Хаяг: Сүхбаатар дүүрэг, 1-р хороо\n- Ажлын цаг: өдөр бүр 09:00-21:00\n- Хүргэлт: Улаанбаатар дотор, 10:00-20:00\n- Захиалга: энэ чатаар эсвэл 7700-0000 утсаар\n\nДүрэм:\n- Монголоор, эелдэг, 3 өгүүлбэрээс ихгүй хариул.\n- Markdown, од (*), хэш (#) тэмдэг бүү хэрэглэ. Энгийн текст бич.\n- Дээрх мэдээлэлд байхгүй зүйл, ялангуяа үнэ бүү зохио. Мэдэхгүй бол \"Менежер тань удахгүй хариулна\" гэж хэл.\n- Зөвхөн дэлгүүрийн тухай асуултад хариул.\n- Хэрэглэгч регистр, картын дугаар зэрэг хувийн мэдээлэл бичвэл \"Хувийн мэдээллээ энд бүү бичээрэй, менежер тантай холбогдоно\" гэж хариул."
+        }
+      },
+      "id": "c3f0c003-0000-4000-8000-000000000003",
+      "name": "Message a model",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d2b0b20-2222-4c22-a222-000000000002",
+              "name": "answer",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3f0c003-0000-4000-8000-000000000004",
+      "name": "Хариу",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Асуулт",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Асуулт": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Хариу",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

@@ -1,0 +1,9 @@
+# Зөвхөн сайтад хэрэгтэй файлыг Vercel-д илгээнэ. Бусад нь интернэтэд харагдахгүй.
+/*
+!api
+!lib
+!index.html
+!privacy.html
+!styles.css
+!script.js
+!package.json

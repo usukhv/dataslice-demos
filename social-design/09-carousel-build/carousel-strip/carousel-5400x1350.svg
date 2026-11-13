@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="5400" height="1350" viewBox="0 0 5400 1350">
+<title>Carousel кофе</title>
+<rect id="bg" x="0" y="0" width="5400" height="1350" fill="#F7F1E8"/>
+<circle id="cross-circle" cx="1080" cy="880" r="240" fill="#F2B33D"/>
+<line id="cross-line" x1="80" y1="1180" x2="5320" y2="1180" stroke="#B4532A" stroke-width="6"/>
+<rect id="cross-photo" x="2900" y="160" width="680" height="600" rx="40" fill="#D9CBB8"/>
+<text id="cross-photo-label" x="3240" y="474" font-family="Inter" font-size="40" font-weight="700" fill="#1F1A17" text-anchor="middle">ЗУРАГ</text>
+<g id="slide-01">
+<text x="80" y="300" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">Гэртээ кофе</text>
+<text x="80" y="396" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">чанахад</text>
+<text x="80" y="492" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">гаргадаг 3 алдаа</text>
+<text x="80" y="556" font-family="Inter" font-size="34" font-weight="400" fill="#5C534D" text-anchor="start">Гүйлгээд үз</text>
+<text x="1000" y="120" font-family="Inter" font-size="30" font-weight="700" fill="#B4532A" text-anchor="end">1/5</text>
+<path d="M 880 1260 H 990 M 960 1230 L 990 1260 L 960 1290" fill="none" stroke="#1F1A17" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="slide-02">
+<text x="1160" y="300" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">Яагаад гашуун</text>
+<text x="1160" y="396" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">болдог вэ?</text>
+<text x="1160" y="460" font-family="Inter" font-size="34" font-weight="400" fill="#5C534D" text-anchor="start">Асуудлаа нэг өгүүлбэрээр</text>
+<text x="2080" y="120" font-family="Inter" font-size="30" font-weight="700" fill="#B4532A" text-anchor="end">2/5</text>
+</g>
+<g id="slide-03">
+<text x="2240" y="964" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">Алдаа 1:</text>
+<text x="2240" y="1060" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">хэт халуун ус</text>
+<text x="2240" y="1124" font-family="Inter" font-size="34" font-weight="400" fill="#5C534D" text-anchor="start">Тайлбараа энд нэг өгүүлбэрээр</text>
+<text x="3160" y="120" font-family="Inter" font-size="30" font-weight="700" fill="#B4532A" text-anchor="end">3/5</text>
+</g>
+<g id="slide-04">
+<text x="3320" y="868" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">Алдаа 2, 3:</text>
+<text x="3320" y="964" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">хуучин үр,</text>
+<text x="3320" y="1060" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">буруу нунтаг</text>
+<text x="3320" y="1124" font-family="Inter" font-size="34" font-weight="400" fill="#5C534D" text-anchor="start">Слайд бүрт нэг санаа</text>
+<text x="4240" y="120" font-family="Inter" font-size="30" font-weight="700" fill="#B4532A" text-anchor="end">4/5</text>
+</g>
+<g id="slide-05">
+<text x="4400" y="300" font-family="Inter" font-size="84" font-weight="700" fill="#1F1A17" text-anchor="start">Хадгалаад ав</text>
+<text x="4400" y="364" font-family="Inter" font-size="34" font-weight="400" fill="#5C534D" text-anchor="start">Шинэ үрээ манай шопоос аваарай</text>
+<text x="5320" y="120" font-family="Inter" font-size="30" font-weight="700" fill="#B4532A" text-anchor="end">5/5</text>
+<rect x="4400" y="1000" width="360" height="88" rx="44" fill="#B4532A"/>
+<text x="4580" y="1057" font-family="Inter" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">Хадгалах</text>
+<text x="5320" y="1250" font-family="Inter" font-size="28" font-weight="700" fill="#B4532A" text-anchor="end">ЛОГО</text>
+</g>
+<g id="slide-guides">
+<line x1="1080" y1="0" x2="1080" y2="1350" stroke="#FF3B30" stroke-width="4" stroke-dasharray="20 14"/>
+<line x1="2160" y1="0" x2="2160" y2="1350" stroke="#FF3B30" stroke-width="4" stroke-dasharray="20 14"/>
+<line x1="3240" y1="0" x2="3240" y2="1350" stroke="#FF3B30" stroke-width="4" stroke-dasharray="20 14"/>
+<line x1="4320" y1="0" x2="4320" y2="1350" stroke="#FF3B30" stroke-width="4" stroke-dasharray="20 14"/>
+<rect x="80" y="80" width="920" height="1190" fill="none" stroke="#18A957" stroke-width="2" stroke-dasharray="12 10"/>
+<rect x="1160" y="80" width="920" height="1190" fill="none" stroke="#18A957" stroke-width="2" stroke-dasharray="12 10"/>
+<rect x="2240" y="80" width="920" height="1190" fill="none" stroke="#18A957" stroke-width="2" stroke-dasharray="12 10"/>
+<rect x="3320" y="80" width="920" height="1190" fill="none" stroke="#18A957" stroke-width="2" stroke-dasharray="12 10"/>
+<rect x="4400" y="80" width="920" height="1190" fill="none" stroke="#18A957" stroke-width="2" stroke-dasharray="12 10"/>
+</g>
+</svg>

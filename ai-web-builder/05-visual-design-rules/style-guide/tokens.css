@@ -1,0 +1,14 @@
+:root {
+  --primary: #2457e0;      /* гол өнгө: зөвхөн CTA, холбоос. Цагаан текст дээр 5.97:1 */
+  --primary-dark: #1b44b3;
+  --text: #1a1a1a;
+  --muted: #5c5c66;        /* туслах текст: цагаан дээр 6.61:1 */
+  --bg: #ffffff;
+  --surface: #f6f4f1;
+  --border: #e2dfda;
+  --success: #1f7a4d;
+  --error: #c62828;
+  --radius: 12px;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}

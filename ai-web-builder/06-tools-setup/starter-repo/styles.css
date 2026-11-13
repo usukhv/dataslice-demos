@@ -1,0 +1,10 @@
+body { font-family: Arial, sans-serif; margin: 0; padding: 24px; }
+
+.cta {
+  display: inline-block;
+  background: #2457e0;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+}

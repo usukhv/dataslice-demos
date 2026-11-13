@@ -1,0 +1,18 @@
+# 8-р хичээлийн Text style ба Color variable (жишээ утга, өөрийнхөөрөө соль)
+
+Text style (Local styles > + > Text)
+  Heading/XL   Inter Bold      96   Line height 105%   Letter spacing -1%
+  Heading/L    Inter Bold      64   Line height 110%   Letter spacing -1%
+  Body/M       Inter Regular   36   Line height 140%   Letter spacing 0%
+  Label/S      Inter Bold      24   Line height 120%   Letter spacing 6%   (ТОМ ҮСГЭЭР)
+
+Color variable (Variables > + Create variable > Color), collection: Brand
+  brand/primary     #B4532A
+  brand/secondary   #2F5D50
+  brand/accent      #F2B33D
+  neutral/dark      #1F1A17
+  neutral/light     #F7F1E8
+
+Auto layout
+  cta          Horizontal, padding 32 / 16, Corner radius 999, Hug contents
+  text-block   Vertical, Gap 24, Hug contents

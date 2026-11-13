@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>Post 01</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#F7F1E8"/>
+<circle id="photo" cx="540" cy="500" r="240" fill="#D9CBB8"/>
+<text id="photo-label" x="540" y="512" font-family="Inter" font-size="32" font-weight="700" fill="#1F1A17" text-anchor="middle">ЗУРАГ</text>
+<text id="title" x="80" y="940" font-family="Inter" font-size="80" font-weight="700" fill="#1F1A17" text-anchor="start">Шинэ цэс гарлаа</text>
+<text id="subtitle" x="80" y="1000" font-family="Inter" font-size="36" font-weight="400" fill="#1F1A17" text-anchor="start">Өнөөдрөөс бүх салбарт</text>
+</svg>

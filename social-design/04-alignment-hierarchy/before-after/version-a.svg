@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>A</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#F7F1E8"/>
+<text id="title" x="540" y="60" font-family="Inter" font-size="48" font-weight="400" fill="#1F1A17" text-anchor="middle">Шинэ амт: чацарганатай латте</text>
+<text id="subtitle" x="540" y="700" font-family="Inter" font-size="48" font-weight="400" fill="#1F1A17" text-anchor="middle">Өнөөдрөөс бүх салбарт</text>
+<text id="cta" x="540" y="1320" font-family="Inter" font-size="48" font-weight="400" fill="#1F1A17" text-anchor="middle">Захиалах</text>
+</svg>

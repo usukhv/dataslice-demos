@@ -1,0 +1,19 @@
+{
+  "update_id": 512345678,
+  "message": {
+    "message_id": 42,
+    "from": {
+      "id": 123456789,
+      "is_bot": false,
+      "first_name": "Сарнай",
+      "language_code": "mn"
+    },
+    "chat": {
+      "id": 123456789,
+      "first_name": "Сарнай",
+      "type": "private"
+    },
+    "date": 1794460800,
+    "text": "Хэдэн цаг хүртэл ажилладаг вэ?"
+  }
+}

@@ -1,0 +1,17 @@
+DNS тохиргооны жишээ (tsetsegsalon.mn)
+
+Vercel: Project > Settings > Domains > Add Existing
+  tsetsegsalon.mn        (apex)
+  www.tsetsegsalon.mn    (www)
+
+Registrar-ын DNS хэсэгт Vercel-ийн Domains хуудсанд ХАРАГДАЖ БАЙГАА утгыг яг хуулна:
+
+  Type    Name    Value
+  A       @       <Vercel-ийн харуулсан IP>
+  CNAME   www     <Vercel-ийн харуулсан хаяг>
+
+Анхаар:
+- Энд бичсэн утгыг биш, өөрийн төслийн Vercel хуудсан дээрх утгыг ашигла.
+- MX (имэйл) бичлэгт хүрэхгүй.
+- Nameserver солих бол эхлээд бүх DNS бичлэгээ хуулж ав.
+- Vercel-ийн Domains хуудсанд домэйн зөв тохирсон гэж гарах хүртэл хүлээ. SSL автоматаар гарна.

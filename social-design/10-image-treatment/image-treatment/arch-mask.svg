@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>Arch mask</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#F7F1E8"/>
+<path id="mask-shape" d="M 190 1100 V 540 A 350 350 0 0 1 890 540 V 1100 Z" fill="#D9CBB8"/>
+<text id="hint" x="540" y="760" font-family="Inter" font-size="34" font-weight="700" fill="#1F1A17" text-anchor="middle">Зургаа энд Mask хий</text>
+<text id="title" x="80" y="1250" font-family="Inter" font-size="56" font-weight="700" fill="#1F1A17" text-anchor="start">Нуман Mask</text>
+</svg>

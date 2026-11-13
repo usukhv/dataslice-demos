@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+<title>Square 1:1</title>
+<rect id="bg" x="0" y="0" width="1080" height="1080" fill="#F7F1E8"/>
+<rect id="photo" x="80" y="80" width="920" height="420" rx="32" fill="#D9CBB8"/>
+<g id="text">
+<text id="title-1" x="80" y="640" font-family="Inter" font-size="88" font-weight="700" fill="#1F1A17" text-anchor="start">Гарчиг энд</text>
+<text id="subtitle" x="80" y="712" font-family="Inter" font-size="36" font-weight="400" fill="#5C534D" text-anchor="start">Дэд мөр: нэг өгүүлбэр</text>
+<rect id="cta-bg" x="80" y="760" width="300" height="80" rx="40" fill="#B4532A"/>
+<text id="cta-label" x="230" y="812" font-family="Inter" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">Захиалах</text>
+</g>
+<text id="logo" x="1000" y="990" font-family="Inter" font-size="28" font-weight="700" fill="#B4532A" text-anchor="end">ЛОГО</text>
+<g id="guides">
+<rect x="80" y="80" width="920" height="920" fill="none" stroke="#18A957" stroke-width="3" stroke-dasharray="16 12"/>
+<text x="96" y="120" font-family="Inter" font-size="24" font-weight="400" fill="#18A957" text-anchor="start">margin 80 px</text>
+</g>
+</svg>

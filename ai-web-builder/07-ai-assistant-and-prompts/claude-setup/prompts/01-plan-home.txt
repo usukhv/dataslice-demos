@@ -1,0 +1,9 @@
+Зорилго: Цэцэг салоны нэг хуудастай нүүр хуудас хий.
+Контекст: Wireframe design/home-mobile.png, design/home-desktop.png файлд.
+Style guide design/style-guide.png-д. Бүх текст content.md-д.
+Хэрэглэгчид ихэвчлэн гар утсаар орно.
+Хязгаар: Энгийн HTML, CSS, JavaScript. Framework, npm package ашиглахгүй.
+Файлууд: index.html, styles.css, script.js. Бүх текст монголоор.
+Шалгуур: 375px өргөнд хэвтээ scroll гарахгүй.
+"Цаг захиалах" товч эхний дэлгэцэнд харагдана. Сэтгэгдэл, тоо бүү зохио.
+Алхам: Эхлээд төлөвлөгөөгөө тайлбарла. Би зөвшөөрсний дараа код бич.

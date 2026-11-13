@@ -1,0 +1,112 @@
+{
+  "name": "Анхны workflow: захиалгын дүн",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1f0c001-0000-4000-8000-000000000001",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4c1a9a10-1111-4b11-9111-000000000001",
+              "name": "customer",
+              "value": "Сарнай",
+              "type": "string"
+            },
+            {
+              "id": "4c1a9a10-1111-4b11-9111-000000000002",
+              "name": "product",
+              "value": "Ноолууран ороолт",
+              "type": "string"
+            },
+            {
+              "id": "4c1a9a10-1111-4b11-9111-000000000003",
+              "name": "price",
+              "value": 85000,
+              "type": "number"
+            },
+            {
+              "id": "4c1a9a10-1111-4b11-9111-000000000004",
+              "name": "quantity",
+              "value": 2,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1f0c001-0000-4000-8000-000000000002",
+      "name": "Захиалга",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4c1a9a10-1111-4b11-9111-000000000005",
+              "name": "total",
+              "value": "={{ $json.price * $json.quantity }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a1f0c001-0000-4000-8000-000000000003",
+      "name": "Нийт дүн",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Захиалга",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Захиалга": {
+      "main": [
+        [
+          {
+            "node": "Нийт дүн",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

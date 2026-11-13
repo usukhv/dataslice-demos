@@ -1,0 +1,133 @@
+{
+  "name": "Receipt monthly report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "months",
+              "monthsInterval": 1,
+              "triggerAtDayOfMonth": 1,
+              "triggerAtHour": 9,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "e0ef1196-02c6-53d0-9387-007f006e2e90",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "receipts"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "month",
+              "lookupValue": "={{ $now.minus({ months: 1 }).toFormat('yyyy-MM') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "825f2761-03a5-5ef9-842d-8b3e901fff8a",
+      "name": "Last month rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        220,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Code node \"Build report\" · Mode: Run Once for All Items\n// Өнгөрсөн сарын мөрүүдийг ангиллаар нэмж, Telegram мессежийн текст бэлдэнэ.\nconst month = $now.minus({ months: 1 }).toFormat('yyyy-MM');\nconst totals = {};\nlet count = 0;\n\nfor (const item of $input.all()) {\n  const row = item.json;\n  if (!row.category) continue;\n  totals[row.category] = (totals[row.category] || 0) + Number(row.amount || 0);\n  count++;\n}\n\nconst fmt = (n) => n.toLocaleString('en-US');\nconst lines = Object.entries(totals)\n  .sort((a, b) => b[1] - a[1])\n  .map(([category, sum]) => `- ${category}: ${fmt(sum)}`);\nconst total = Object.values(totals).reduce((a, b) => a + b, 0);\n\nconst text = count\n  ? `${month} сарын зардал (MNT)\\n\\n${lines.join('\\n')}\\n\\nНийт: ${fmt(total)}\\nБаримт: ${count}`\n  : `${month} сард бүртгэсэн баримт алга.`;\n\nreturn [{ json: { text } }];"
+      },
+      "id": "cf9fe897-b95f-5339-80d0-765e126ac62f",
+      "name": "Build report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "YOUR_CHAT_ID",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5da34b89-55b6-5f40-9909-99ffcb983b7d",
+      "name": "Send report",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Last month rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Last month rows": {
+      "main": [
+        [
+          {
+            "node": "Build report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build report": {
+      "main": [
+        [
+          {
+            "node": "Send report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "pinData": {}
+}

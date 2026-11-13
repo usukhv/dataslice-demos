@@ -1,0 +1,8 @@
+# 1. Homebrew: brew.sh сайтын нүүрэнд байгаа командыг хуулж ажиллуул.
+#    Төгсгөлд хэвлэсэн shell-ийн тохиргооны командуудыг ажиллуул.
+# 2. Git, Python
+brew install git python
+git --version
+python3 --version
+# macOS 15-аас хуучин бол:
+xcode-select --install

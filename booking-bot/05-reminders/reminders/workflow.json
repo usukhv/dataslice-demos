@@ -1,0 +1,139 @@
+{
+  "name": "Booking Reminders",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ],
+      "id": "505a5dc1-84a0-5399-b033-f31868e75244"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_CALENDAR_ID@group.calendar.google.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now.plus({ days: 1 }).startOf('day') }}",
+        "timeMax": "={{ $now.plus({ days: 1 }).endOf('day') }}",
+        "options": {}
+      },
+      "name": "Tomorrow events",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        220,
+        300
+      ],
+      "id": "2ce7390d-2385-54d3-ae0b-ea8415032b93"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "360a7fc7-29cb-5773-a1fa-5c1e6e9319f1",
+              "leftValue": "={{ String($json.description) }}",
+              "rightValue": "^\\d+$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Bot bookings",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        300
+      ],
+      "id": "c5d4d3ec-46aa-528d-97be-a8f6ba2b9e9a"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.description }}",
+        "text": "=Сануулга: маргааш {{ DateTime.fromISO($json.start.dateTime).toFormat('HH:mm') }}-д таныг хүлээж байна.\n{{ $json.summary }}\nИрэх боломжгүй бол ботод \"цуцлах\" гэж бичээрэй.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "Send reminder",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        300
+      ],
+      "id": "8ac0edc8-e17c-5c9c-a823-9dec1ebe620a",
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Tomorrow events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tomorrow events": {
+      "main": [
+        [
+          {
+            "node": "Bot bookings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bot bookings": {
+      "main": [
+        [
+          {
+            "node": "Send reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "active": false,
+  "meta": {}
+}

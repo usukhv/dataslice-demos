@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Receipt",
+  "description": "Gemini-ээс авах баримтын өгөгдөл. Уншиж чадаагүй талбар null байна.",
+  "type": "object",
+  "required": ["is_receipt", "date", "vendor", "amount", "currency", "category", "receipt_no", "items_total"],
+  "additionalProperties": false,
+  "properties": {
+    "is_receipt": { "type": "boolean", "description": "Зураг баримт мөн эсэх" },
+    "date": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Баримтын огноо, YYYY-MM-DD" },
+    "vendor": { "type": ["string", "null"], "description": "Дэлгүүр, байгууллагын нэр" },
+    "amount": { "type": ["number", "null"], "exclusiveMinimum": 0, "description": "Нийт төлсөн дүн" },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$", "default": "MNT" },
+    "category": { "enum": ["Хүнс", "Хоол кафе", "Тээвэр", "Шатахуун", "Оффис", "Харилцаа холбоо", "Бусад"] },
+    "receipt_no": { "type": ["string", "null"], "description": "Баримт дээр хэвлэгдсэн дугаар" },
+    "items_total": { "type": ["number", "null"], "description": "Барааны мөрүүдийн үнийн нийлбэр" }
+  }
+}

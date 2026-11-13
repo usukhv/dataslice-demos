@@ -1,0 +1,7 @@
+# Нууц утгууд: хэзээ ч commit хийхгүй
+.env
+.env*.local
+# Vercel CLI-ийн локал тохиргоо
+.vercel
+node_modules
+.DS_Store

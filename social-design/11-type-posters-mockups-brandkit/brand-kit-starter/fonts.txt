@@ -1,0 +1,4 @@
+Гарчиг:  Inter Bold / ExtraBold (Ө Ү-тэй)
+Текст:   Inter Regular (Ө Ү-тэй)
+Хувилбар хослол: Lora Bold + Golos Text, Oswald Bold + Inter
+Бүгд Google Fonts, Figma-д бэлэн. Ө Ү-гүй фонт (Playfair Display, Unbounded, Poppins) хэрэглэхгүй.

@@ -1,0 +1,132 @@
+{
+  "name": "Sheets test",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "7ff7a1e5-9e11-580d-9ae5-7699d3db1cbc",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "646e1e9d-9c08-5595-a871-a1cee9ecc4a0",
+              "name": "date",
+              "value": "2026-11-05",
+              "type": "string"
+            },
+            {
+              "id": "32fe6f62-0c12-54e6-98fb-daf5a0a5c073",
+              "name": "vendor",
+              "value": "Туршилтын дэлгүүр",
+              "type": "string"
+            },
+            {
+              "id": "d57bed11-6372-5da0-961c-356df3a5169f",
+              "name": "amount",
+              "value": 12500,
+              "type": "number"
+            },
+            {
+              "id": "d1cca6ac-3a04-5106-8add-8d1d2a7da2bd",
+              "name": "currency",
+              "value": "MNT",
+              "type": "string"
+            },
+            {
+              "id": "14140996-ef27-51d1-918d-989f42195ff2",
+              "name": "category",
+              "value": "Хүнс",
+              "type": "string"
+            },
+            {
+              "id": "c42dd097-3252-5384-8318-502caaf40301",
+              "name": "month",
+              "value": "2026-11",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "797d5467-cf6d-5fa8-bce5-50d3c8349195",
+      "name": "Test receipt",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "receipts"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "12fb2c5f-0c0e-50d7-98d8-0d0b69060f8e",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        440,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Test receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test receipt": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ulaanbaatar"
+  },
+  "pinData": {}
+}

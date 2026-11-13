@@ -1,0 +1,444 @@
+{
+  "name": "QPay invoice (sandbox)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "62d6e185-b734-5b2a-a8cf-868343d8f836",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1aca35c4-2368-5803-a376-fe72726b1302",
+              "name": "qpay_base",
+              "value": "https://merchant-sandbox.qpay.mn",
+              "type": "string"
+            },
+            {
+              "id": "f6681139-a7c0-5f05-9eb2-95717c3d5953",
+              "name": "invoice_code",
+              "value": "YOUR_INVOICE_CODE",
+              "type": "string"
+            },
+            {
+              "id": "56787904-f189-5c50-8f74-55081df2db14",
+              "name": "callback_url",
+              "value": "https://YOUR-N8N-DOMAIN/webhook/qpay-paid",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "627c7e52-c311-5c20-8db3-9f2b00f1c58f",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "773042cf-8c45-5b80-ae9f-9133e6326321",
+              "name": "order_id",
+              "value": "1001",
+              "type": "string"
+            },
+            {
+              "id": "173f2740-97e1-5ff6-b0ba-9d699426e8df",
+              "name": "chat_id",
+              "value": "YOUR_TEST_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "4cfffae9-7a58-503e-a8ae-38ba7af39ffa",
+              "name": "total",
+              "value": 45000,
+              "type": "number"
+            },
+            {
+              "id": "4c87c961-4c87-5dbb-af7a-67cc72f1a4e6",
+              "name": "description",
+              "value": "Order 1001",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "74fab06a-d8e2-597e-9ec0-82ac5beb70d2",
+      "name": "Order",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').item.json.qpay_base }}/v2/auth/token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {}
+      },
+      "id": "61487f7a-89f7-571d-a19f-83971caed046",
+      "name": "QPay token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').item.json.qpay_base }}/v2/invoice",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('QPay token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"invoice_code\": \"{{ $('Config').item.json.invoice_code }}\",\n  \"sender_invoice_no\": \"{{ $('Order').item.json.order_id }}\",\n  \"invoice_receiver_code\": \"{{ $('Order').item.json.chat_id }}\",\n  \"invoice_description\": \"{{ $('Order').item.json.description }}\",\n  \"amount\": {{ $('Order').item.json.total }},\n  \"callback_url\": \"{{ $('Config').item.json.callback_url }}\"\n}",
+        "options": {}
+      },
+      "id": "6856150b-5600-53af-b534-99682fc0b082",
+      "name": "Create invoice",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Order').item.json.chat_id }}",
+        "text": "=Захиалга #{{ $('Order').item.json.order_id }}\nТөлөх дүн: {{ $('Order').item.json.total }}₮\nТөлбөрийн холбоос: {{ $('Create invoice').item.json.qPay_shortUrl }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "492e55e3-add7-5cb4-a8fb-a42f8cf33179",
+      "name": "Send payment link",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "minutes"
+      },
+      "id": "16e0e301-197e-5845-a0d8-cc8d563b5be4",
+      "name": "Wait 3 min",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        0
+      ],
+      "webhookId": "aef491b7-c5c0-5aa3-8428-2a8a4e3930be"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').item.json.qpay_base }}/v2/payment/check",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('QPay token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"object_type\": \"INVOICE\",\n  \"object_id\": \"{{ $('Create invoice').item.json.invoice_id }}\",\n  \"offset\": { \"page_number\": 1, \"page_limit\": 100 }\n}",
+        "options": {}
+      },
+      "id": "3273e13a-d7e4-5620-a943-74ee92b45533",
+      "name": "Check payment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1358d0af-eced-59bb-9464-5de71f511b38",
+              "leftValue": "={{ $json.count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "6af3c637-ff61-560d-9485-9b83e83733e6",
+      "name": "Paid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Shop Bot"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Orders",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $('Order').item.json.order_id }}",
+            "status": "paid",
+            "invoice_id": "={{ $('Create invoice').item.json.invoice_id }}"
+          },
+          "matchingColumns": [
+            "order_id"
+          ],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice_id",
+              "displayName": "invoice_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "344d0932-a5b8-503d-a219-31a0aa918525",
+      "name": "Mark paid",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1800,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Order').item.json.chat_id }}",
+        "text": "=Төлбөр орлоо. Баярлалаа! Захиалга #{{ $('Order').item.json.order_id }} бэлтгэгдэж эхэллээ.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ce0f88c6-80a8-5e2d-a937-8995fdd65c48",
+      "name": "Thank customer",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Солих зүйлс (PLACEHOLDER)\n- **Config**: `YOUR_INVOICE_CODE`, `YOUR-N8N-DOMAIN`. Эхлээд sandbox, дараа нь https://merchant.qpay.mn\n- **Order**: `YOUR_TEST_CHAT_ID`, дүн\n- **QPay token**: Basic Auth credential (client_id / client_secret)\n- **Mark paid**: Shop Bot файлаа сонго",
+        "height": 220,
+        "width": 520
+      },
+      "id": "2554cdd3-5958-506a-b6ac-d0696ebf51de",
+      "name": "Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -360
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order": {
+      "main": [
+        [
+          {
+            "node": "QPay token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QPay token": {
+      "main": [
+        [
+          {
+            "node": "Create invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create invoice": {
+      "main": [
+        [
+          {
+            "node": "Send payment link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send payment link": {
+      "main": [
+        [
+          {
+            "node": "Wait 3 min",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 3 min": {
+      "main": [
+        [
+          {
+            "node": "Check payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check payment": {
+      "main": [
+        [
+          {
+            "node": "Paid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Paid?": {
+      "main": [
+        [
+          {
+            "node": "Mark paid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark paid": {
+      "main": [
+        [
+          {
+            "node": "Thank customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<title>Feed template</title>
+<rect id="bg" x="0" y="0" width="1080" height="1350" fill="#F7F1E8"/>
+<rect id="photo" x="80" y="80" width="920" height="640" rx="32" fill="#D9CBB8"/>
+<g id="text-block">
+<text id="title" x="80" y="860" font-family="Inter" font-size="96" font-weight="700" fill="#1F1A17" text-anchor="start">Гарчиг энд</text>
+<text id="subtitle" x="80" y="932" font-family="Inter" font-size="36" font-weight="400" fill="#5C534D" text-anchor="start">Дэд мөр: нэг өгүүлбэр</text>
+<g id="cta">
+<rect id="cta-bg" x="80" y="980" width="264" height="80" rx="40" fill="#B4532A"/>
+<text id="cta-label" x="212" y="1032" font-family="Inter" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">Захиалах</text>
+</g>
+</g>
+<text id="logo" x="1000" y="1240" font-family="Inter" font-size="28" font-weight="700" fill="#B4532A" text-anchor="end">ЛОГО</text>
+</svg>

@@ -1,0 +1,14 @@
+Git-ийн өдөр тутмын тушаалууд (salon-site хавтас дотор)
+
+git --version                      Git суусан эсэх
+git config --global user.name "Нэр"
+git config --global user.email "you@example.com"
+
+git init                           Хавтсыг repo болгоно (ганц удаа)
+git status                         Юу өөрчлөгдсөн бэ
+git add .                          Бүх өөрчлөлтийг commit-д бэлдэнэ
+git commit -m "Add hero section"   Тайлбартай хадгалах цэг
+git log --oneline                  Commit-уудын жагсаалт
+git push                           GitHub руу илгээнэ
+
+Commit хийхийн өмнө: git status-д .env эсвэл нууц файл харагдаж байвал ЗОГС.

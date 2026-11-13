@@ -1,0 +1,12 @@
+```json
+{
+  "is_receipt": true,
+  "date": "2026-11-05",
+  "vendor": "Хүнсний дэлгүүр",
+  "amount": 12500,
+  "currency": "MNT",
+  "category": "Хүнс",
+  "receipt_no": "A1023",
+  "items_total": 12500
+}
+```

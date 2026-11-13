@@ -1,0 +1,24 @@
+# Google Fonts: Ө ө Ү ү (U+04E8 U+04E9 U+04AE U+04AF) шалгалт, 2026-11-12
+# Арга: Google Fonts CSS API-аас фонт файлыг татаж, fontTools-оор cmap шалгав.
+
+Ө, Ү-тэй (монгол текстэд болно):
+  Sans-serif: Inter, Golos Text, Onest, Manrope, Montserrat, Rubik, Nunito, Comfortaa,
+              Oswald, Roboto, Open Sans, Noto Sans, IBM Plex Sans, Fira Sans, PT Sans,
+              Raleway, Commissioner
+  Serif:      Lora, PT Serif, Source Serif 4, Alegreya, Noto Serif
+
+Кирилл бий, Ө Ү байхгүй (бүү хэрэглэ):
+  Unbounded, Playfair Display, Russo One
+
+Кирилл огт байхгүй:
+  Poppins, DM Sans, Bebas Neue
+
+Найдвартай хослол (гарчиг + текст):
+  1. Inter Bold + Inter Regular      хамгийн аюулгүй
+  2. Lora Bold + Golos Text          дулаан, сонгодог
+  3. Oswald Bold + Inter Regular     эрч хүчтэй, сурталчилгаа
+  4. Montserrat ExtraBold + Inter    типографик постер
+  5. Manrope Bold + Onest            орчин үеийн, цэвэрхэн
+
+Тест мөр (Figma-д хуулж тавь):
+  Өглөөний үйлчилгээ. Үнэ 12 900₮

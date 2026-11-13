@@ -1,0 +1,223 @@
+{
+  "name": "Gemini бот (production)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000001",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "f10ce53a-ff17-47b2-ba94-f8928ce2a440"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e3c1c30-3333-4d33-b333-000000000001",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000002",
+      "name": "Текст мөн үү",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $json.message.chat.id }}"
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000003",
+      "name": "Typing тэмдэг",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "Чи \"Номин цэцэг\" цэцгийн дэлгүүрийн Telegram туслах.\n\nМэдээлэл:\n- Хаяг: Сүхбаатар дүүрэг, 1-р хороо\n- Ажлын цаг: өдөр бүр 09:00-21:00\n- Хүргэлт: Улаанбаатар дотор, 10:00-20:00\n- Захиалга: энэ чатаар эсвэл 7700-0000 утсаар\n\nДүрэм:\n- Монголоор, эелдэг, 3 өгүүлбэрээс ихгүй хариул.\n- Markdown, од (*), хэш (#) тэмдэг бүү хэрэглэ. Энгийн текст бич.\n- Дээрх мэдээлэлд байхгүй зүйл, ялангуяа үнэ бүү зохио. Мэдэхгүй бол \"Менежер тань удахгүй хариулна\" гэж хэл.\n- Зөвхөн дэлгүүрийн тухай асуултад хариул.\n- Хэрэглэгч регистр, картын дугаар зэрэг хувийн мэдээлэл бичвэл \"Хувийн мэдээллээ энд бүү бичээрэй, менежер тантай холбогдоно\" гэж хариул."
+        }
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000004",
+      "name": "Message a model",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        -100
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.content.parts[0].text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000005",
+      "name": "Хариу илгээх",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Түр саатал гарлаа. 1 минутын дараа дахин бичнэ үү.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000006",
+      "name": "Саатлын хариу",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "Уучлаарай, одоохондоо зөвхөн текст мессеж ойлгоно.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f6f0c006-0000-4000-8000-000000000007",
+      "name": "Текст биш",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        140
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Текст мөн үү",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Текст мөн үү": {
+      "main": [
+        [
+          {
+            "node": "Typing тэмдэг",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Текст биш",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing тэмдэг": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Хариу илгээх",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Саатлын хариу",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

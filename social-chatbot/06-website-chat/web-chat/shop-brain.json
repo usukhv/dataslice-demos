@@ -1,0 +1,326 @@
+{
+  "name": "Shop Brain",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "text"
+            },
+            {
+              "name": "session_id"
+            },
+            {
+              "name": "channel"
+            }
+          ]
+        }
+      },
+      "id": "e6805471-570b-513e-afbe-7e2824c2c1b7",
+      "name": "Input",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "Чи \"Нарны цүнх\" дэлгүүрийн AI борлуулагч туслах.\n- Монгол кирилл хэлээр эелдэг, товч хариул. Нэг хариулт 5 өгүүлбэрээс хэтрэхгүй.\n- Бараа, үнэ, хэмжээ, нөөцийг заавал Products tool-оос шалгаж хариул.\n- Хүргэлт, ажлын цаг, буцаалт, төлбөрийг FAQ tool-оос шалгаж хариул.\n- Хүснэгтэд байхгүй үнэ, хямдрал, амлалтыг хэзээ ч бүү зохио.\n- Үнийг төгрөгөөр, мянгатын таслалтай бич (45,000₮).\n- Регистр, картын дугаар, нууц код хэзээ ч бүү асуу.\n- Хариулж чадахгүй, эсвэл гомдол, буцаалт, төлбөрийн маргаантай асуулт бол хариултаа яг [ХҮН] гэж эхлүүлээд, ажилтан удахгүй холбогдоно гэж эелдгээр хэл.\n- Харилцагч авах гэвэл бараа, тоо ширхэг, нэр, утсыг асууж ав.\n- Нийт дүнг зөвхөн Products tool-ын үнээр бод.\n- Бүх мэдээллийг харилцагчаар баталгаажуулсны дараа л CreateOrder tool-ийг дууд.\n- Захиалга бүртгэгдсэний дараа \"Ажилтан шалгаад төлбөрийн холбоос илгээнэ\" гэж хэл."
+        }
+      },
+      "id": "69199263-42c7-54f2-a025-e42a5e21b8b3",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c0954377-5826-553a-8fb2-0324bc38bf2c",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Input').item.json.session_id }}",
+        "contextWindowLength": 10
+      },
+      "id": "d2661b1c-4601-5517-a7a6-49ac368589ff",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Дэлгүүрийн бараа: code, name, price (төгрөг), sizes, in_stock, description. Үнэ, хэмжээ, нөөцийг эндээс шалга.",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Shop Bot"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Products",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "6e891f03-9fef-5e8b-a22e-3fdf0285e0ad",
+      "name": "Products",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        380,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Түгээмэл асуулт, хариулт: хүргэлт, ажлын цаг, буцаалт, төлбөр.",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Shop Bot"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "FAQ",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "bfb71e2a-2fad-52eb-a3f6-9c7a2265c3c1",
+      "name": "FAQ",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        520,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Захиалга бүртгэнэ. Харилцагч бараа, тоо, нэр, утсаа баталгаажуулсны дараа л дууд.",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Shop Bot"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Orders",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{ $now.toFormat('yyMMddHHmmss') }}",
+            "time": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+            "chat_id": "={{ $('Input').item.json.session_id }}",
+            "name": "={{ $fromAI('name', 'Харилцагчийн нэр', 'string') }}",
+            "phone": "={{ $fromAI('phone', 'Харилцагчийн утасны дугаар', 'string') }}",
+            "items": "={{ $fromAI('items', 'Бараа ба тоо ширхэг, жишээ: CB-01 x2', 'string') }}",
+            "total": "={{ $fromAI('total', 'Нийт дүн төгрөгөөр, зөвхөн тоо', 'number') }}",
+            "status": "new",
+            "invoice_id": ""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "items",
+              "displayName": "items",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice_id",
+              "displayName": "invoice_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cb26eced-abe8-5aaf-ad39-1902cb189541",
+      "name": "CreateOrder",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        660,
+        220
+      ]
+    }
+  ],
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Products": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FAQ": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateOrder": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

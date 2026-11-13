@@ -1,0 +1,24 @@
+# Нэг удаа
+git config --global user.name "Bat-Erdene"
+git config --global user.email "ТАНЫ_NOREPLY_ХАЯГ"
+
+# Repo-г компьютер руу авах
+cd ~/Documents
+git clone https://github.com/username/username.github.io.git
+cd username.github.io
+
+# Өдөр бүр
+git pull                      # GitHub дээрх шинэ commit-уудыг татна
+git status                    # юу өөрчлөгдсөнийг харна
+git add README.md             # commit-д оруулах файлаа сонгоно
+git add .                     # бүх өөрчлөлтийг сонгоно (эхлээд git status-аар шалга)
+git commit -m "Update bio"    # хадгалах цэг үүсгэнэ
+git push                      # GitHub руу илгээнэ
+
+# Түүх
+git log --oneline             # гарахдаа q
+
+# Branch
+git switch -c add-skills      # шинэ branch үүсгээд түүн рүү шилжинэ
+git push -u origin add-skills # branch-аа GitHub руу анх удаа илгээнэ
+git switch main               # main руу буцна
